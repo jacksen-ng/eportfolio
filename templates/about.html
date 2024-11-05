@@ -207,7 +207,7 @@
                                     {% endfor %}
                                 </div>
                             </div>
-                            <!-- 添加新技能的表单 -->
+                        
                             <form method="POST" action="{{ url_for('add_skill') }}" class="mb-3">
                                 <div class="input-group">
                                     <input type="text" name="new_skill" class="form-control" placeholder="Enter new skill" required minlength="2">
@@ -298,7 +298,6 @@
         let clickCount = 0;
         let clickTimer = null;
 
-        // 监听标题点击事件
         document.querySelector('.navbar-brand').addEventListener('click', function(e) {
             e.preventDefault();
             clickCount++;
