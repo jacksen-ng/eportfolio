@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Jacksen - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f8ff; /* Light sky blue background */
+            color: #333;
+            line-height: 1.6;
+        }
+        .navbar {
+            background-color: #4a90e2; /* Bright blue navbar */
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #ffd700 !important; /* Gold color on hover */
+        }
+        .content {
+            padding: 8rem 0;
+        }
+        h1, h2 {
+            color: #4a90e2; /* Bright blue headings */
+        }
+        .highlight {
+            color: #ff6b6b; /* Coral highlight color */
+        }
+        .section {
+            margin-bottom: 4rem;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #4a90e2; /* Blue left border */
+        }
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .profile-img-container {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 4px solid #4a90e2;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .profile-img:hover {
+            transform: scale(1.1);
+        }
+        .social-links a {
+            color: #4a90e2;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #ff6b6b; /* Coral color on hover */
+        }
+        .lead {
+            font-size: 1.25rem;
+            color: #ff6b6b; /* Coral lead text */
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul li:before {
+            content: "▹";
+            color: #4a90e2;
+            margin-right: 10px;
+        }
+        .skill-tag {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Jacksen's Portfolio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('project') }}">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('contact')}}">Contact</a>
+                    </li>
+                    {% if logged_in %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <section class="section profile-section">
+                        <div class="profile-img-container">
+                            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="[name]" class="profile-img">
+                        </div>
+                        <h1>About Me</h1>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="about_me" class="form-control">{{ about_me }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save About Me</button>
+                            </form>
+                        {% else %}
+                            <p class="lead">{{ about_me }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2>Who I Am</h2>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="who_i_am" class="form-control">{{ who_i_am }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="interests1" class="form-control">{{ interests1 }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Who I Am</button>
+                            </form>
+                        {% else %}
+                            <p>{{ who_i_am }}</p>
+                            <p>{{ interests1 }}</p>
+                        {% endif %}
+
+                    </section>
+
+                    <section class="section">
+                        <h2>Education</h2>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="education1" class="form-control">{{ education1 }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="education2" class="form-control">{{ education2 }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="education3" class="form-control">{{ education3 }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Education</button>
+                            </form>
+                        {% else %}
+                            <p><strong>{{ education1 }}</strong></p>
+                            <p>{{ education2 }}</p>
+                            <p>{{ education3 }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2>Skills</h2>
+                        {% if is_admin %}
+                            <!-- 显示现有技能和删除按钮 -->
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    {% for skill_key, skill_value in skills_dict.items() %}
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="skill-tag">{{ skill_value }}</span>
+                                            <form method="POST" action="{{ url_for('delete_skill', skill_id=skill_key.replace('skill', '')) }}" class="ms-2">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <!-- 添加新技能的表单 -->
+                            <form method="POST" action="{{ url_for('add_skill') }}" class="mb-3">
+                                <div class="input-group">
+                                    <input type="text" name="new_skill" class="form-control" placeholder="Enter new skill" required minlength="2">
+                                    <button type="submit" class="btn btn-primary">Add Skill</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% for skill_key, skill_value in skills_dict.items() %}
+                                        <span class="skill-tag">{{ skill_value }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2>Internship</h2>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="internship" class="form-control">{{ internship }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Internship</button>
+                            </form>
+                        {% else %}
+                            <p>{{ internship }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2>Part-time Job</h2>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="parttime_job" class="form-control">{{ parttime_job }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Part-time Job</button>
+                            </form>
+                        {% else %}
+                            <p>{{ parttime_job }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2>Interests</h2>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="interests2" class="form-control">{{ interests2 }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Interests</button>
+                            </form>
+                        {% else %}
+                            <p>{{ interests2 }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2>Let's Connect</h2>
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_about_page_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <textarea name="connect" class="form-control">{{ connect }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Save Connect</button>
+                            </form>
+                        {% else %}
+                            <p>{{ connect }}</p>
+                        {% endif %}
+                        <div class="social-links">
+                            <a href="https://github.com/jacksen-ng" target="_blank"><i class="fab fa-github"></i></a>
+                            <a href="mailto:jacksen123456789@gmail.com"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editSection(section) {
+            alert('Editing ' + section);
+        }
+
+        let clickCount = 0;
+        let clickTimer = null;
+
+        // 监听标题点击事件
+        document.querySelector('.navbar-brand').addEventListener('click', function(e) {
+            e.preventDefault();
+            clickCount++;
+            
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+            }
+            
+            clickTimer = setTimeout(() => {
+                if (clickCount >= 3) {  
+                    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                    loginModal.show();
+                }
+                clickCount = 0;
+            }, 500);
+        });
+
+        let skillCount = 16; 
+        function addSkill() {
+            skillCount++;
+            const container = document.getElementById('skillsContainer');
+            const newTextarea = document.createElement('textarea');
+            newTextarea.name = `skill${skillCount}`;
+            newTextarea.className = 'form-control';
+            newTextarea.placeholder = 'Enter new skill';
+            container.appendChild(newTextarea);
+        }
+    </script>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Admin Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('login') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

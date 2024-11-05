@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Jacksen's Portfolio</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        .navbar {
+            background-color: #4a90e2;
+            padding: 1rem 0;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #ffd700 !important;
+        }
+        .content {
+            padding: 8rem 0;
+        }
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #4a90e2;
+            margin-bottom: 1rem;
+        }
+        .subtitle {
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        .expertise-list {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .expertise-item {
+            text-align: center;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .expertise-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .expertise-icon {
+            font-size: 3rem;
+            color: #4a90e2;
+            margin-bottom: 0.5rem;
+        }
+        .btn-custom {
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .btn-custom:hover {
+            background-color: #3a7bc8;
+        }
+        .edit-button {
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .edit-button:hover {
+            background-color: #3a7bc8;
+        }
+        .edit-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .text-danger.small {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Jacksen's Portfolio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('project') }}">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                    {% if logged_in %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <section class="section editable">
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" name="name" value="{{ name }}" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Subtitle:</label>
+                                    <input type="text" name="subtitle" value="{{ subtitle }}" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Introduction:</label>
+                                    <textarea name="intro" class="form-control">{{ intro }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Skill 1:</label>
+                                    <input type="text" name="skill1" value="{{ skill1 }}" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Skill 2:</label>
+                                    <input type="text" name="skill2" value="{{ skill2 }}" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Skill 3:</label>
+                                    <input type="text" name="skill3" value="{{ skill3 }}" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Skill 4:</label>
+                                    <input type="text" name="skill4" value="{{ skill4 }}" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Skill 5:</label>
+                                    <input type="text" name="skill5" value="{{ skill5 }}" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+                            </form>
+                        {% else %}
+                            <h1>{{ name }}</h1>
+                            <p class="subtitle">{{ subtitle }}</p>
+                            <p class="mb-4">{{ intro }}</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        <h2 class="mb-4">Skills</h2>
+                        <ul class="expertise-list mb-4">
+                            {% for i in range(5) %}
+                            {% set skill = [skill1, skill2, skill3, skill4, skill5][i] %}
+                            {% set icon = skill_icons[i] %}
+                            <li class="expertise-item">
+                                <i class="{{ icon }} expertise-icon"></i>
+                                <div>{{ skill }}</div>
+                                {% if icon == 'fas fa-question' %}
+                                <div class="text-danger small">Not a recognized programming skill</div>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+
+                    <section class="section">
+                        {% if is_admin %}
+                            <form method="POST" action="{{ url_for('update_project_content') }}" class="edit-form">
+                                <div class="form-group">
+                                    <label>Project Description:</label>
+                                    <textarea name="project_desc" class="form-control" rows="4">{{ project_desc if project_desc else '' }}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Collaboration Text:</label>
+                                    <textarea name="collab_text" class="form-control" rows="4">{{ collab_text if collab_text else '' }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Save Project Changes</button>
+                            </form>
+                        {% else %}
+                            <p class="mb-4">{{ project_desc if project_desc else '' }}</p>
+                            <p class="mb-5">{{ collab_text if collab_text else '' }}</p>
+                        {% endif %}
+                        <a href="{{ url_for('project') }}" class="btn btn-custom">Check out my work</a>
+                        {% if is_admin %}
+                        <button class="edit-button" onclick="editSection('project')">Edit</button>
+                        {% endif %}
+                    </section>
+
+                    <section class="section">
+                        {% if is_teacher or is_admin %}
+                            <h2 class="mb-4">Teacher Comments</h2>
+                            <ul class="expertise-list mb-4">
+                                {% for comment in teacher_comments %}
+                                    <li class="expertise-item">
+                                        <p>{{ comment[1] }}</p>
+                                        <small>{{ comment[2] if comment[2] else '' }}</small>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            
+                            {% if is_teacher %}
+                                <form method="POST" action="{{ url_for('insert_teacher_comment') }}" class="edit-form">
+                                    {{ form.hidden_tag() }}
+                                    <div class="form-group">
+                                        <label>Add Comment:</label>
+                                        {{ form.comment(class="form-control", required=true) }}
+                                    </div>
+                                    {{ form.submit(class="btn btn-primary mt-3") }}
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editSection(section) {
+            alert('Editing ' + section);
+        }
+
+        let clickCount = 0;
+        let clickTimer = null;
+
+        document.querySelector('.navbar-brand').addEventListener('click', function(e) {
+            e.preventDefault();
+            clickCount++;
+            
+            if (clickTimer) {
+                clearTimeout(clickTimer);
+            }
+            
+            clickTimer = setTimeout(() => {
+                if (clickCount >= 3) {  
+                    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                    loginModal.show();
+                }
+                clickCount = 0;
+            }, 500);
+        });
+    </script>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Admin Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('login') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

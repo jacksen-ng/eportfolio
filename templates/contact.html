@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f8ff; /* Light sky blue background */
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #4a90e2; /* Bright blue navbar */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .navbar-nav {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-item {
+            margin-left: 1.5rem;
+        }
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #ffd700 !important; /* Gold color on hover */
+        }
+        .content {
+            padding: 4rem 0;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #4a90e2; /* Bright blue heading */
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .contact-form {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a90e2;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        button[type="submit"] {
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: 100%;
+            font-weight: 600;
+        }
+        button[type="submit"]:hover {
+            background-color: #3a7bc8;
+        }
+        .google-form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .google-form-wrapper {
+            position: relative;
+            padding-bottom: 100%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .google-form-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="navbar-brand" href="{{ url_for('home') }}">Jacksen's Portfolio</a>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('about') }}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('project') }}">Projects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+            </li>
+            {% if logged_in %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="container content">
+        <h1>Contact</h1>
+        {% if not logged_in %}
+            <div class="google-form-container">
+                <div class="google-form-wrapper">
+                    <iframe src="https://forms.gle/LZtuvmaJdym8dESd8"></iframe>
+                </div>
+            </div>
+        {% elif is_admin %}
+            <div class="google-form-container">
+                <div class="google-form-wrapper">
+                    <iframe src="https://docs.google.com/spreadsheets/d/1yBeg4wFkQiCI4YwO1o7y5IY7n5iZCfoSVHRMYrtis04/edit?usp=sharing"></iframe>
+                </div>
+            </div>
+        {% else %}
+            <div class="content-view">
+                <p>Contact information is only editable by administrators.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
