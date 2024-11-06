@@ -9,6 +9,10 @@ from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
+# 使用随机生成的密钥
+app.secret_key = os.urandom(24)
+# 或者从环境变量中获取密钥（推荐用于生产环境）
+# app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 
 UPLOAD_FOLDER = {
     'pdfs': 'static/pdfs',
@@ -115,11 +119,16 @@ def about():
     parttime_job = dataaccess.get_about_page_content(10)
     
     skills_dict = {}
-    all_skills = dataaccess.get_all_skills()  
+    all_skills = dataaccess.get_all_skills()
     for skill in all_skills:
-        if skill:  
-            skills_dict[f'skill{skill[0]}'] = skill[1]  
-    
+        try:
+            if isinstance(skill, (list, tuple)) and len(skill) >= 2:
+                skill_id, skill_name = skill[0], skill[1]
+                if skill_id is not None and skill_name:
+                    skills_dict[f'skill{skill_id}'] = skill_name
+        except Exception as e:
+            print(f"Error processing skill: {skill}, Error: {str(e)}")
+            
     form = insert_about_skill_form()
     
     return render_template('about.html', 
