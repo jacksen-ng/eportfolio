@@ -131,7 +131,6 @@ def update_skill(id, new_skill):
     with get_connection() as conn:
         cursor = conn.cursor()
         try:
-            # 修改这里：从 skill 改为 skills 表
             cursor.execute("UPDATE skills SET skill = ? WHERE id = ?", (new_skill, id))
             conn.commit()
             return True
