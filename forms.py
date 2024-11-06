@@ -50,7 +50,6 @@ class insert_skill_form(FlaskForm):
             return False
         
         skill = self.skill.data.lower()
-        # 添加其他验证规则
         if len(skill) < 2:
             self.skill.errors.append('Skill name must be at least 2 characters long')
             return False

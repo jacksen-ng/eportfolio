@@ -58,7 +58,6 @@ class Skill:
         return "<Skill %r>" % self.id
     
     def validate(self):
-        """验证技能是否有效"""
         if not self.skill:
             return False
         return len(self.skill.strip()) >= 2

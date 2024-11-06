@@ -337,7 +337,7 @@ def update_project_content():
 def add_skill():
     try:
         new_skill = request.form.get('new_skill', '').strip()
-        print(f"Received new skill: {new_skill}")  # 调试信息
+        print(f"Received new skill: {new_skill}")  
         
         if not new_skill:
             flash('Skill cannot be empty', 'danger')
@@ -346,7 +346,7 @@ def add_skill():
         # 直接使用 Skill 模型插入
         skill = Skill(id=None, skill=new_skill)
         success = skill.insert_skill(new_skill)
-        print(f"Insert result: {success}")  # 调试信息
+        print(f"Insert result: {success}")  
         
         if success:
             flash(f'Skill "{new_skill}" added successfully', 'success')
@@ -354,7 +354,7 @@ def add_skill():
             flash(f'Failed to add skill "{new_skill}"', 'danger')
             
     except Exception as e:
-        print(f"Error in add_skill: {str(e)}")  # 调试信息
+        print(f"Error in add_skill: {str(e)}")  
         flash(f'Error adding skill: {str(e)}', 'danger')
     
     return redirect(url_for('about'))
@@ -388,7 +388,6 @@ def add_project():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 
-                # Determine the appropriate folder based on file extension
                 ext = filename.rsplit('.', 1)[1].lower()
                 if ext == 'pdf':
                     folder = UPLOAD_FOLDER['pdfs']
@@ -397,10 +396,8 @@ def add_project():
                 elif ext in ['ppt', 'pptx']:
                     folder = UPLOAD_FOLDER['presentations']
                 
-                # Create folder if it doesn't exist
                 os.makedirs(folder, exist_ok=True)
                 
-                # Save the file
                 file_path = os.path.join(folder, filename)
                 file.save(file_path)
                 saved_files.append({
