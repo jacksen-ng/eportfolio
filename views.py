@@ -9,10 +9,9 @@ from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
-# 使用随机生成的密钥
+
 app.secret_key = os.urandom(24)
-# 或者从环境变量中获取密钥（推荐用于生产环境）
-# app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
+
 
 UPLOAD_FOLDER = {
     'pdfs': 'static/pdfs',
@@ -434,4 +433,4 @@ def insert_teacher_comment():
 
 if __name__ == '__main__':
     dataaccess.ensure_skill_table() 
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    app.run(host='0.0.0.0', port=3007, debug=True)
